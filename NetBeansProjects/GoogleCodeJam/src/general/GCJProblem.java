@@ -17,21 +17,17 @@ public class GCJProblem
     private List<String> lines;
 
     private int T;
-    private List<List<String>> Cases;        
+    private List<List<String>> Cases;
     private PrintWriter pw;
 
     public GCJProblem() {}
     
     public int getT() { return T; }
-    public void setT(int T) { this.T = T; }
+//    public void setT(int T) { this.T = T; }
 
     public void setLinesPerBlock(int LinesPerBlock) { this.LinesPerBlock = LinesPerBlock; }
     
-    public List<List<String>> getCases() { return Cases; }
-    public void setCases(List<List<String>> Cases) { this.Cases = Cases; }
-
     public PrintWriter getPw() { return pw; }
-    public void setPw(PrintWriter pw) { this.pw = pw; }
 
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
@@ -41,6 +37,8 @@ public class GCJProblem
 
     public List<String> getLines() { return lines; }
     public void setLines(List<String> lines) { this.lines = lines; }
+    
+    public List<List<String>> getCases() { return Cases; }
     
     public void setParameters(String Path, String InputFile, int LinesPerBlock) {
         this.LinesPerBlock = LinesPerBlock;
@@ -64,11 +62,12 @@ public class GCJProblem
         this.Cases = new ArrayList<>(this.T);
         for (int iT = 0; iT < this.T; iT++)
         {
-            this.Cases.add(this.lines
-                                .stream()
-                                .skip(iT * this.LinesPerBlock + 1)
-                                .limit(this.LinesPerBlock)
-                                .collect(Collectors.toList())
+            this.Cases.add(
+                this.lines
+                    .stream()
+                    .skip(iT * this.LinesPerBlock + 1)
+                    .limit(this.LinesPerBlock)
+                    .collect(Collectors.toList())
             );
         }
     }
