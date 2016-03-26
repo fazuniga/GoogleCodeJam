@@ -35,7 +35,7 @@ public class Problems
         for (Integer p : prices) {
             int candidato = (int) (p / 0.75);
             
-            if (prices.contains(candidato) && count.get(p) > 0) {
+            if (prices.contains(candidato) && count.get(candidato) > 0) {
                 finales.add(p);
                 count.put(candidato, count.get(candidato) - 1);
             }

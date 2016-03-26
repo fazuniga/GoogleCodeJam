@@ -323,4 +323,12 @@ public class Functions
         for (String p : s) { pp.add(Integer.parseInt(p)); }
         return pp;
     }
+    
+    public static Boolean DoubleIsInt(double d) {
+        if ((d == Math.floor(d)) && !Double.isInfinite(d)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
