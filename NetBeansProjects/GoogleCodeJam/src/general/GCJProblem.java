@@ -1,4 +1,5 @@
 package general;
+import gcj.Problem;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 /* @author fazuniga */
 public class GCJProblem
 {
-    private String path, fileName, fileOut;
+    private String fileName, fileOut;
     private int LinesPerBlock;
     private List<String> lines;
 
@@ -24,7 +25,6 @@ public class GCJProblem
     public int getT() { return T; }
     public void setT(int T) { this.T = T; }
 
-    public int getLinesPerBlock() { return LinesPerBlock; }
     public void setLinesPerBlock(int LinesPerBlock) { this.LinesPerBlock = LinesPerBlock; }
     
     public List<List<String>> getCases() { return Cases; }
@@ -32,9 +32,6 @@ public class GCJProblem
 
     public PrintWriter getPw() { return pw; }
     public void setPw(PrintWriter pw) { this.pw = pw; }
-
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
 
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
@@ -46,11 +43,10 @@ public class GCJProblem
     public void setLines(List<String> lines) { this.lines = lines; }
     
     public void setParameters(String Path, String InputFile, int LinesPerBlock) {
-        this.path = Path;
         this.LinesPerBlock = LinesPerBlock;
         
-        this.fileName = new File(new File(this.path), InputFile).getPath();
-        this.fileOut = new File(this.path + InputFile.split("\\.")[0] + ".out").getPath();
+        this.fileName = new File(new File(Path), InputFile).getPath();
+        this.fileOut = new File(Path + InputFile.split("\\.")[0] + ".out").getPath();
     }
     
     public void PrepareProblem() throws IOException {
@@ -86,13 +82,11 @@ public class GCJProblem
 
     public void Run() {
         try {
-            // Acá se reemplaza por el que resuelve el problema
-            Problems.CodysJam(this);
+            Problem.CodysJam(this); // Acá se reemplaza por el que resuelve el problema
             
             this.CloseWriter();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+            
+        } catch (IOException ex) { ex.printStackTrace(); }
     }
 
 }
