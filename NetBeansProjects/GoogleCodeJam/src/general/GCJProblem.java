@@ -44,7 +44,6 @@ public class GCJProblem
     
     public void setParameters(String Path, String InputFile, int LinesPerBlock) {
         this.LinesPerBlock = LinesPerBlock;
-        
         this.fileName = new File(new File(Path), InputFile).getPath();
         this.fileOut = new File(Path + InputFile.split("\\.")[0] + ".out").getPath();
     }
