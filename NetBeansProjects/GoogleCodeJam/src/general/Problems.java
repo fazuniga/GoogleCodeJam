@@ -19,10 +19,59 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import static general.Functions.Suma;
+import java.util.TreeMap;
+import java.util.function.Function;
 
 /* @author fazuniga */
 public class Problems
 {   
+    public static String CodysJamSingle(int N, List<String> s) {
+        List<Integer> prices = Functions.ConvertStringToIntList(s);
+        // Collections.reverse(prices);
+       
+        Map<Integer, Long> ucount = prices.stream().collect(
+                Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<Integer, Long> count = new TreeMap<>(ucount);
+                
+        List<Integer> finales = new ArrayList<>(N);
+        
+        for (Integer p : prices) {
+            int precio_original = (int) (p / 0.75);
+            
+            if (prices.contains(precio_original) && count.get(precio_original) > 0 && count.get(p) > 0) {
+                finales.add(p);
+                count.put(p, count.get(p) - 1);
+                count.put(precio_original, count.get(precio_original) - 1);
+            }
+        }
+        
+        Collections.sort(finales);
+        
+        String msg = "";
+        if (finales.size() == N) {
+            for (int i = 0; i < finales.size(); i++) {
+                if (i < finales.size() - 1) { msg += finales.get(i) + " "; }
+                else { msg += finales.get(i); }
+            }
+        }
+        
+        return msg;
+    }
+    
+    public static void CodysJam(GCJProblem cjp) throws IOException {
+        
+        for (int iT = 0; iT < cjp.getT(); iT++)
+        {
+            int N = Integer.parseInt(cjp.getCases().get(iT).get(0));
+            List<String> s = Arrays.asList(cjp.getCases().get(iT).get(1).split(" "));
+            String msg = CodysJamSingle(N, s);
+            
+            System.out.println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().flush();
+        }
+    }
+    
     public static String ReverseWordsSingle(List<String> s) {
         // Definir variables específicas del problema 
         String msg = "";

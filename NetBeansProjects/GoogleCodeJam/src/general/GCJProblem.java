@@ -80,7 +80,7 @@ public class GCJProblem
 
     public void Run() {
         try {
-            Problem.CodysJam(this); // Acá se reemplaza por el que resuelve el problema
+            // Problem.CodysJam(this); // Acá se reemplaza por el que resuelve el problema
             
             this.CloseWriter();
             

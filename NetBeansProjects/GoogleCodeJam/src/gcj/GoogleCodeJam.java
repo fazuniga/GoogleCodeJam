@@ -7,7 +7,7 @@ public class GoogleCodeJam {
 
     public GCJProblem cjp;
     public String Path = "input/";
-    public String InputFile = "A-small-practice.in";
+    public String InputFile = "A-large-practice.in";
     public int LinesPerBlock = 2;
 
     public static void main(String[] args) throws IOException
