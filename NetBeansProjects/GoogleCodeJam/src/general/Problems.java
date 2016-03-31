@@ -72,6 +72,78 @@ public class Problems
         }
     }
     
+    public static String DanceClockSingle(List<String> s) {
+        int D, K, N;
+        D = Integer.parseInt(s.get(0));
+        K = Integer.parseInt(s.get(1));
+        N = Integer.parseInt(s.get(2));
+        
+        List<Long> Dancers = new ArrayList<>();
+        for (int i = 0; i < D; i++) { Dancers.add((long)(i+1)); }
+        System.out.println(Dancers);
+        
+        for (int j = 1; j <= N % D; j++) {
+            if (j % 2 == 0) { Dancers = EvenTurn(Dancers); }
+            else { Dancers = OddTurn(Dancers); }
+        }
+        
+        String msg = "";
+        for (int k = 0; k < D; k++) 
+        {
+            if (Dancers.get(k) == K) {
+                int Left = k+1;
+                int Right = k-1;
+                
+                if (Left == D) { Left = 0; }
+                if (Right < 0) { Right = D-1; }
+                
+                msg += Dancers.get(Left) + " " + Dancers.get(Right);
+            }
+        }
+        
+        return msg;
+    }
+    
+    public static List<Long> EvenTurn(List<Long> Dancers) {
+        
+        Long aux = Dancers.get(0);
+        Dancers.set(0, Dancers.get(Dancers.size() - 1));
+        Dancers.set(Dancers.size() - 1, aux);
+        
+        for (int i = 1; i < Dancers.size() - 1; i = i+2)
+        {
+            aux = Dancers.get(i);
+            Dancers.set(i, Dancers.get(i+1));
+            Dancers.set(i+1, aux);    
+        }
+        
+        return Dancers;
+    }
+    public static List<Long> OddTurn(List<Long> Dancers) {
+        
+        for (int i = 0; i < Dancers.size(); i = i+2)
+        {
+            Long aux = Dancers.get(i);
+            Dancers.set(i, Dancers.get(i+1));
+            Dancers.set(i+1, aux);
+        }
+        
+        return Dancers;
+    }
+    
+    public static void DanceClock(GCJProblem cjp) throws IOException
+    {
+        for (int iT = 0; iT < cjp.getT(); iT++)
+        {
+            List<String> s = Arrays.asList(cjp.getCases().get(iT).get(0).split(" "));
+            String msg = DanceClockSingle(s);
+            
+            System.out.println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().flush();
+        }
+    }
+    
     public static String ReverseWordsSingle(List<String> s) {
         // Definir variables específicas del problema 
         String msg = "";
