@@ -31,6 +31,14 @@ public class Functions
 
         return d;
     }
+    
+    public static Boolean IsEven(BigInteger x) {
+        return x.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO);
+    }
+    
+    public static Boolean IsOdd(BigInteger x) {
+        return !IsEven(x);
+    }
 
     /*
     public static Boolean IsSquare(BigInteger num)
