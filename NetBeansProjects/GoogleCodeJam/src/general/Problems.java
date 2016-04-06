@@ -25,6 +25,40 @@ import java.util.function.Function;
 /* @author fazuniga */
 public class Problems
 {   
+    public static String PolynesiaGlotSingle(List<String> s) {
+        int C, V, L;
+        
+        C = Integer.parseInt(s.get(0));
+        V = Integer.parseInt(s.get(1));
+        L = Integer.parseInt(s.get(2));
+        
+        String msg = Words(C, V, L).toString();
+        
+        return msg;
+    }
+    public static BigInteger Words(int C, int V, int L) {
+        BigInteger[] arr = new BigInteger[L + 1];
+        
+        arr[0] = BigInteger.valueOf(1);
+        arr[1] = BigInteger.valueOf(V);
+        for (int i = 2; i < L+1; i++) {
+            arr[i] = arr[i-1].multiply(BigInteger.valueOf(V)).add(arr[i-2].multiply(BigInteger.valueOf(C)).multiply(BigInteger.valueOf(V)));
+        }
+        
+        return arr[L].remainder(BigInteger.valueOf(1000000007));
+    }
+    public static void PolynesiaGlot(GCJProblem cjp) {
+        for (int iT = 0; iT < cjp.getT(); iT++)
+        {
+            List<String> params = Arrays.asList(cjp.getCases().get(iT).get(0).split(" "));
+            String msg = PolynesiaGlotSingle(params);
+            
+            System.out.println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().flush();
+        }
+    }
+    
     public static String CodysJamSingle(int N, List<String> s) {
         List<Integer> prices = Functions.ConvertStringToIntList(s);
         // Collections.reverse(prices);
