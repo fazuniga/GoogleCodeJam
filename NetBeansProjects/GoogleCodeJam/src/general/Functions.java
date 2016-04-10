@@ -31,6 +31,32 @@ public class Functions
 
         return d;
     }
+    public static List<Long> DivisorsL(long n)
+    {
+        List<Long> d = new ArrayList<>();
+        d.add((long)1);
+        long divisor = 2;
+        do {
+            if (n % divisor == 0) { d.add(divisor); }
+            divisor++;
+        } while (divisor <= n);
+
+        return d;
+    }
+    public static List<Long> DivisorsLimit(long n, int limit)
+    {
+        List<Long> d = new ArrayList<>();
+        d.add((long)1);
+        long divisor = 2;
+        do {
+            if (n % divisor == 0) { d.add(divisor); }
+            divisor++;
+            
+            if (d.size() == limit) { break; }
+        } while (divisor <= n);
+
+        return d;
+    }
     
     public static Boolean IsEven(BigInteger x) {
         return x.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO);
@@ -217,12 +243,49 @@ public class Functions
     }
 
     public static Boolean isPrime(int num) {
-        if ( num > 2 && num % 2 == 0 ) {
+        if (num > 2 && num % 2 == 0) {
             return false;
         }
         int top = (int)Math.sqrt(num) + 1;
         for(int i = 3; i < top; i+=2){
             if(num % i == 0) { return false; }
+        }
+        return true; 
+    }
+    
+    public static Boolean isPrimeL(long num) {
+        if (num > 2 && num % 2 == 0) {
+            return false;
+        }
+        int top = (int)Math.sqrt(num) + 1;
+        for(int i = 3; i < top; i+=2){
+            if(num % i == 0) { return false; }
+        }
+        return true; 
+    }
+    public static Boolean isPrimeBig(BigInteger num) {
+        if (num.compareTo(BigInteger.valueOf(2)) > 0 &&
+            num.remainder(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {
+            return false;
+        }
+        
+        BigInteger top = sqrt(num).add(BigInteger.ONE);
+        
+        for(BigInteger i = BigInteger.valueOf(3); i.compareTo(top) < 0; i = i.add(BigInteger.valueOf(2))){
+            if(num.remainder(i).equals(BigInteger.ZERO)) { return false; }
+        }
+        return true; 
+    }
+    public static Boolean isPrimeBigAlt(BigInteger num, int contMax) {
+        if (num.compareTo(BigInteger.valueOf(2)) > 0 &&
+            num.remainder(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {
+            return false;
+        }
+        
+        BigInteger top = sqrt(num).add(BigInteger.ONE);
+        
+        for(BigInteger i = BigInteger.valueOf(3); i.compareTo(top) < 0 && i.compareTo(BigInteger.valueOf(contMax)) < 0; i = i.add(BigInteger.valueOf(2))){
+            if(num.remainder(i).equals(BigInteger.ZERO)) { return false; }
         }
         return true; 
     }

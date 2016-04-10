@@ -19,12 +19,280 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import static general.Functions.Suma;
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Function;
 
 /* @author fazuniga */
 public class Problems
 {   
+    /* 2016 - QR - JamCoin */
+    public static String JamCoinSingle(List<String> params) {
+        
+        int N = Integer.parseInt(params.get(0));
+        int J = Integer.parseInt(params.get(1));
+        
+        List<String> msg = new ArrayList<>();
+        List<String> out = new ArrayList<>();
+        
+        // N = 6;
+        // J = 3;
+        
+        // Initial string
+        StringBuilder sb = Initial(N);
+        
+        int nJamCoins = 0;
+        
+        List<List<Integer>> ida = GetIndices(N);
+        List<String> cases = new ArrayList<>();
+
+        for (List<Integer> caso : ida) {
+            for (int i : caso) { sb.setCharAt(i, '1'); }
+            cases.add(sb.toString());
+            sb = Initial(N);
+        }
+        
+        cases = cases.stream().distinct().collect(Collectors.toList());
+        Collections.sort(cases);
+        // Collections.shuffle(cases);
+         
+        while (nJamCoins < J)
+        {
+            for (int m = 0; m < cases.size() - 1; m+=3)
+            // for (String s : cases)
+            {
+                String s = cases.get(m);
+                
+                List<BigInteger> bases = GetBases(s);
+                Boolean isJamCoin = IsJamCoin(bases);
+                
+                if (isJamCoin)
+                {
+                    nJamCoins++;
+                    msg.add(s);
+                    System.out.println("#: " + nJamCoins + " - sb: " + s + " - bases: " + bases);
+
+                    for (BigInteger base : bases) {
+                        List<BigInteger> div = DivisorsBILimit(base, 2);
+                        List<BigInteger> nonTrivial = div.stream().
+                                filter((x) -> x != BigInteger.ONE && !Objects.equals(x, base)).collect(Collectors.toList());
+                        
+                        msg.add(nonTrivial.get(0).toString());
+                    }
+                }
+
+                if (msg.size() > 0) {
+                    out.add(String.join(" ", msg));
+                    msg = new ArrayList<>();
+                }
+                
+                if (nJamCoins == J) { break; }
+            }
+        }
+        
+        String o = String.join("\r\n", out);
+        return o;
+    }
+    public static List<List<Integer>> GetIndices(int N) {
+        int s = 0;
+        List<List<Integer>> out = Indices(N, 1);
+        List<List<Integer>> m;
+        
+        int off = 2;
+        do {
+            m = Indices(N, off);
+            if (!m.isEmpty()) {
+                out.addAll(m);
+                off++;
+            }
+        } while (m.size() > 31);
+        
+        return out;
+    }
+    public static List<List<Integer>> Indices(int N, int off) {
+        List<List<Integer>> idx = new ArrayList<>();
+        List<Integer> idj;
+        
+        for (int n = 0; n <= (N-2)/2; n++)
+        {
+            int agregar = 2*n;
+            if (agregar == 0) {
+                idj = new ArrayList<>();
+                idx.add(idj);
+            }
+            else {
+                for (int posi = 1; posi < N-1; posi++)
+                {
+                    idj = new ArrayList<>();
+                    for (int posj = posi; posj < N-1; posj = posj + off)
+                    {
+                        if (idj.size() < agregar) {
+                            idj.add(posj);
+                        } else { break; }
+                    }
+
+                    if (idj.size() == agregar) { idx.add(idj); }
+                }
+            }
+        }
+        
+        for (int n = 0; n <= (N-2)/2; n++)
+        {
+            int agregar = 2*n+1;
+            if (agregar == 0) {
+                idj = new ArrayList<>();
+                idx.add(idj);
+            }
+            else {
+                for (int posi = 1; posi < N-1; posi++)
+                {
+                    idj = new ArrayList<>();
+                    for (int posj = posi; posj < N-1; posj = posj + off)
+                    {
+                        if (idj.size() < agregar) {
+                            idj.add(posj);
+                        } else { break; }
+                    }
+
+                    if (idj.size() == agregar) { idx.add(idj); }
+                }
+            }
+        }
+        
+        return idx;
+    }
+    public static StringBuilder Initial(int N) {
+        String s = "";
+        for (int i = 0; i < N; i++) { s+= " "; }
+        StringBuilder sb = new StringBuilder(s);
+        sb.setCharAt(0, '1');
+        sb.setCharAt(N-1, '1');
+        for (int i = 1; i < N-1; i++) { sb.setCharAt(i, '0'); }
+        
+        return sb;
+    }
+    public static Boolean IsJamCoin(List<BigInteger> bases) {
+        for (BigInteger b : bases) {
+            if (Functions.isPrimeBigAlt(b, 10000)) { return false; }
+        }
+        return true;
+    }
+    public static List<BigInteger> GetBases(String c) {
+        List<BigInteger> bases = new ArrayList<>();
+        
+        for (int base = 2; base <= 10; base++) {
+            bases.add(GetBase(c, base));
+        }
+        return bases;
+    }
+    public static BigInteger GetBase(String c, int base) {
+        char[] ca = c.toCharArray();
+        BigInteger suma = BigInteger.valueOf(0);
+        int n = ca.length;
+
+        for (int exp = n-1; exp >= 0; exp--) {
+            suma = suma.add(BaseCalculation(ca[exp], base, n - exp - 1));
+        }
+        return suma;
+    }
+    public static BigInteger BaseCalculation(char c, int b, int exp) {
+        long bit = Long.parseLong(String.valueOf(c));
+        if (bit == 0) { return BigInteger.ZERO; }
+        else  { return new BigDecimal(bit * Math.pow((double) b, (double) exp)).toBigInteger(); }
+    }
+    public static List<BigInteger> DivisorsBILimit(BigInteger n, int limit) {
+        List<BigInteger> d = new ArrayList<>();
+        d.add(BigInteger.ONE);
+        d.add(n);
+        
+        BigInteger divisor = BigInteger.valueOf(2);
+        
+        while (n.compareTo(divisor) > 0 || n.equals(d)) {
+            if (n.remainder(divisor).equals(BigInteger.ZERO)) {
+                d.add(divisor);
+                break;
+            } else {
+                if (divisor.remainder(BigInteger.valueOf(2)).equals(BigInteger.ZERO)) {
+                    divisor = divisor.add(BigInteger.valueOf(1));
+                } else {
+                    divisor = divisor.add(BigInteger.valueOf(2));
+                }
+                
+                if (n.remainder(divisor).equals(BigInteger.ZERO)) {
+                    d.add(divisor);
+                    break;
+                }
+            }
+        }
+        
+        Collections.sort(d);
+        return d;
+    }
+    public static void JamCoinMain(GCJProblem cjp) {
+        for (int iT = 0; iT < cjp.getT(); iT++)
+        {
+            List<String> params = Arrays.asList(cjp.getCases().get(iT).get(0).split(" "));
+            String msg = JamCoinSingle(params);
+            
+            System.out.println("Case #" + (iT+1) + ":");
+            System.out.println(msg);
+            cjp.getPw().println("Case #" + (iT+1) + ":");
+            cjp.getPw().println(msg);
+            cjp.getPw().flush();
+        }
+    }
+    /* 2016 - QR - JamCoin */
+    
+    public static String SheepCountSingle(String N) {
+        Map<String, Integer> count = new HashMap<>();
+        count.put("0", 0);
+        count.put("1", 0);
+        count.put("2", 0);
+        count.put("3", 0);
+        count.put("4", 0);
+        count.put("5", 0);
+        count.put("6", 0);
+        count.put("7", 0);
+        count.put("8", 0);
+        count.put("9", 0);
+        
+        String sn = "";
+        
+        if (N.equals("0")) { return "INSOMNIA"; }
+        else {
+            int mincount = Collections.min(count.values());
+            int i = 1;
+            
+            while (mincount == 0) {
+                sn = String.valueOf(Integer.parseInt(N)*i);
+                char[] ca = sn.toCharArray();
+                
+                for (char c : ca) {
+                    int p = count.get(String.valueOf(c)) + 1;
+                    count.put(String.valueOf(c), p);
+                }
+                
+                mincount = Collections.min(count.values());
+                i++;
+            }
+            
+            return sn;    
+        }        
+    }
+    
+    public static void SheepCount(GCJProblem cjp) {
+        for (int iT = 0; iT < cjp.getT(); iT++)
+        {
+            String N = cjp.getCases().get(iT).get(0);
+            String msg = SheepCountSingle(N);
+            
+            System.out.println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().println("Case #" + (iT+1) + ": " + msg);
+            cjp.getPw().flush();
+        }
+    }
+    
     public static String PolynesiaGlotSingle(List<String> s) {
         int C, V, L;
         
@@ -37,7 +305,7 @@ public class Problems
         return msg;
     }
     public static BigInteger Words(int C, int V, int L) {
-        BigInteger[] arr = new BigInteger[L + 1];
+        BigInteger[] arr = new BigInteger[L + 1]; // porque tiene el 0
         
         arr[0] = BigInteger.valueOf(1);
         arr[1] = BigInteger.valueOf(V);
